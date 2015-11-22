@@ -1,15 +1,22 @@
-exports.generate_permutations = function generate_permutations(array) {
-    if (array.length === 1) {
-        return array;
+Array.prototype.permutations = function Array_permutations() {
+    if (this.length === 1) {
+        return [this];
     }
     var permutations = [],
-        tmp, fixed;
-    for (var i=0; i<array.length; i++) {
-        tmp = array.slice();
+        tmp, fixed, permutation;
+    for (var i=0; i<this.length; i++) {
+        tmp = this.slice();
         fixed = tmp.splice(i, 1);
-        generate_permutations(tmp).forEach(function(partial){
-            permutations.push(fixed + partial);
+        tmp.permutations().forEach(function(partial){
+            partial.unshift(fixed[0]);
+            permutations.push(partial);
         });
     }
     return permutations;
-}
+};
+
+String.prototype.permutations = function permutations() {
+    return this.split('').permutations().map(function(item){
+        return item.join('');
+    });
+};
