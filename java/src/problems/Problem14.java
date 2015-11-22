@@ -7,7 +7,7 @@
 // Which starting number, under one million, produces the longest chain?
 // NOTE: Once the chain starts the terms are allowed to go above one million.
 
-package Problems;
+package problems;
 
 public class Problem14 implements Problem {
 

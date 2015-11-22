@@ -1,4 +1,4 @@
-import Problems.*;
+import problems.*;
 
 public final class ProjectEuler {
 
@@ -9,7 +9,7 @@ public final class ProjectEuler {
 		long startTime = System.currentTimeMillis();
 		
 		try {
-			Class<?> problemClass = Class.forName("Problems.Problem" + args[0]);
+			Class<?> problemClass = Class.forName("problems.Problem" + args[0]);
 			Problem problemInstance = (Problem) problemClass.newInstance();
 			problemInstance.solve();
 		} catch (
