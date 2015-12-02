@@ -3,7 +3,7 @@ Array.prototype.permutations = function Array_permutations() {
         return [this];
     }
     var permutations = [],
-        tmp, fixed, permutation;
+        tmp, fixed;
     for (var i=0; i<this.length; i++) {
         tmp = this.slice();
         fixed = tmp.splice(i, 1);
@@ -15,7 +15,7 @@ Array.prototype.permutations = function Array_permutations() {
     return permutations;
 };
 
-String.prototype.permutations = function permutations() {
+String.prototype.permutations = function String_permutations() {
     return this.split('').permutations().map(function(item){
         return item.join('');
     });
