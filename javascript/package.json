@@ -1,0 +1,22 @@
+{
+  "name": "project-euler",
+  "version": "1.0.0",
+  "description": "",
+  "main": "project_euler.js",
+  "scripts": {
+    "test": "node run_specs.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/acasaccia/project-euler.git"
+  },
+  "author": "acasaccia@gmail.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/acasaccia/project-euler/issues"
+  },
+  "homepage": "https://github.com/acasaccia/project-euler#readme",
+  "devDependencies": {
+    "jasmine": "^2.4.1"
+  }
+}

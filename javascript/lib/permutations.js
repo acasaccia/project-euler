@@ -1,3 +1,5 @@
+"use strict";
+
 Array.prototype.permutations = function Array_permutations() {
     if (this.length === 1) {
         return [this];

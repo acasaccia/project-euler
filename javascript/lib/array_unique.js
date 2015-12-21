@@ -1,3 +1,5 @@
+"use strict";
+
 Array.prototype.unique = function Array_unique() {
     var unique = [];
     for (var i = 0; i < this.length; i++) {

@@ -1,3 +1,5 @@
+"use strict";
+
 var sanitization = require('./sanitization.js');
 
 exports.is_prime = function is_prime(n) {

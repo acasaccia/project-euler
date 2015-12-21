@@ -1,3 +1,5 @@
+"use strict";
+
 Array.prototype.combinations = function Array_combinations(elements_number) {
 
 };
