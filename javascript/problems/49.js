@@ -24,8 +24,9 @@ for (var i=1000; i<9999; i++) {
             var found = false;
             primePermutations.combinations(3).forEach(function(combination){
                 var average = (combination[0] + combination[1] + combination[2]) / 3;
-                if (combination.indexOf(average) !== -1) {
+                if (combination.indexOf(1487) === -1 && combination.indexOf(average) !== -1) {
                     console.log("Found! %j", combination);
+                    found = true;
                 }
             });
             if (found) {
