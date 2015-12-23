@@ -5,7 +5,7 @@ var binary = require('../binary.js');
 describe("binary()", function(){
 
     var pairs = [
-        [0, ''],
+        [0, '0'],
         [1, '1'],
         [2, '10'],
         [3, '11'],
