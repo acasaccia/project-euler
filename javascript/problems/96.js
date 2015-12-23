@@ -74,53 +74,57 @@ function solve(puzzle) {
     };
 
     var solved = function(puzzle) {
-        return puzzle.indexOf('0') === -1;
+        return puzzle.indexOf(0) === -1;
     };
 
-    var get_adjacents = function(puzzle) {
-        var table = puzzle.split('');
-        var adjacents = [];
-        var table_copy, candidate;
+    var evaluate = function(puzzle) {
+        c++;
+        if (c%1000000 === 0) {
+            elapsed = new Date().getTime();
+            console.log("Evaluated %dM positions: %d\"", c/1000000, (elapsed - start) / 1000);
+        }
+        if (solved(puzzle)) {
+            throw new Error(puzzle)
+        }
         for (var i=0; i<81; i++) {
-            if (table[i] === '0') {
+            if (!puzzle[i]) {
                 for (var j=1; j<=9; j++) {
-                    if (valid_insertion(table, i, String(j))) {
-                        table_copy = table.slice();
-                        table_copy[i] = j;
-                        candidate = table_copy.join('');
-                        if (!evaluated[candidate]) {
-                            adjacents.push(candidate);
-                        }
+                    if (valid_insertion(puzzle, i, j)) {
+                        puzzle[i] = j;
+                        evaluate(puzzle);
+                        puzzle[i] = 0;
                     }
                 }
             }
         }
-        return adjacents;
     };
 
-    var evaluated = {};
-
-    var evaluate = function(puzzle) {
-        evaluated[puzzle] = true;
-        if (solved(puzzle)) {
-            throw new Error(puzzle)
-        }
-        var adjacents = get_adjacents(puzzle);
-        adjacents.forEach(function(adjacent){
-            if (!evaluated[adjacent]) {
-                evaluate(adjacent)
-            }
-        });
-    };
+    var c = 0;
+    var start = new Date().getTime(), elapsed;
 
     try {
         evaluate(puzzle);
     } catch (e) {
-        console.log(e.message);
-        console.log(Object.keys(evaluated).length + " positions evaluated.")
+        var table = e.message.split(',');
+        console.log(table.slice(0,9).join(''));
+        console.log(table.slice(9,18).join(''));
+        console.log(table.slice(18,27).join(''));
+        console.log(table.slice(27,36).join(''));
+        console.log(table.slice(36,45).join(''));
+        console.log(table.slice(45,54).join(''));
+        console.log(table.slice(54,63).join(''));
+        console.log(table.slice(63,72).join(''));
+        console.log(table.slice(72,81).join(''));
     }
 
+    console.log("Evaluated %d positions", c);
 
 }
 
-solve('480921657967345821000876493008102900729504108006790200372009014814253769605410082');
+solve('480921657967345821000876493008132906729564108006798205372689514814253769695417382'.split('').map(function(v){
+    return parseInt(v);
+}));
+
+//solve('480921657967345821000876493008102900729504108006790200372009014814253769605410082'.split('').map(function(v){
+//    return parseInt(v);
+//}));
