@@ -3,6 +3,19 @@
 // Squares. The objective of Su Doku puzzles, however, is to replace the blanks (or zeros) in a 9 by 9 grid in such that
 // each row, column, and 3 by 3 box contains each of the digits 1 to 9. Below is an example of a typical starting puzzle
 // grid and its solution grid.
+//
+// 003 020 600
+// 900 305 001
+// 001 806 400
+//
+// 008 102 900
+// 700 000 008
+// 006 708 200
+//
+// 002 609 500
+// 800 203 009
+// 005 010 300
+//
 // A well constructed Su Doku puzzle has a unique solution and can be solved by logic, although it may be necessary to
 // employ "guess and test" methods in order to eliminate options (there is much contested opinion over this). The
 // complexity of the search determines the difficulty of the puzzle; the example above is considered easy because it can
@@ -16,8 +29,16 @@
 
 function solve(puzzle) {
 
-    var valid_quadrant = function(table, quadrant_id, value) {
-
+    var valid_quadrant = function(table, quadrant_row_id, quadrant_column_id, value) {
+        var first_cell = quadrant_row_id * 27 + quadrant_column_id * 3;
+        for (var i=0; i<3; i++) {
+            for (var j=0; j<3; j++) {
+                if (table[first_cell+i+j*9] === value) {
+                    return false;
+                }
+            }
+        }
+        return true;
     };
 
     var valid_row = function(table, row_id, value) {
@@ -33,8 +54,8 @@ function solve(puzzle) {
 
     var valid_column = function(table, column_id, value) {
         var column_begin = column_id;
-        var row_end = column_id + 72;
-        for (var i=row_begin; i<=row_end; i++) {
+        var column_end = column_id + 72;
+        for (var i=column_begin; i<=column_end; i+=9) {
             if (table[i] === value) {
                 return false;
             }
@@ -45,7 +66,9 @@ function solve(puzzle) {
     var valid_insertion = function(table, position, value) {
         var row_id = parseInt(position / 9);
         var column_id = position % 9;
-        return valid_quadrant(table, quadrant_id, value) &&
+        var quadrant_row_id = parseInt(row_id / 3);
+        var quadrant_column_id = parseInt(column_id / 3);
+        return valid_quadrant(table, quadrant_row_id, quadrant_column_id, value) &&
             valid_row(table, row_id, value) &&
             valid_column(table, column_id, value);
     };
@@ -57,28 +80,31 @@ function solve(puzzle) {
     var get_adjacents = function(puzzle) {
         var table = puzzle.split('');
         var adjacents = [];
-        var table_copy;
+        var table_copy, candidate;
         for (var i=0; i<81; i++) {
             if (table[i] === '0') {
                 for (var j=1; j<=9; j++) {
                     if (valid_insertion(table, i, String(j))) {
                         table_copy = table.slice();
                         table_copy[i] = j;
-                        adjacents.push(table_copy[i].join(''));
+                        candidate = table_copy.join('');
+                        if (!evaluated[candidate]) {
+                            adjacents.push(candidate);
+                        }
                     }
                 }
             }
         }
+        return adjacents;
     };
 
-    var visited = {};
+    var evaluated = {};
 
     var evaluate = function(puzzle) {
+        evaluated[puzzle] = true;
         if (solved(puzzle)) {
-            console.log(puzzle);
-            process.exit();
+            throw new Error(puzzle)
         }
-        visited[puzzle] = true;
         var adjacents = get_adjacents(puzzle);
         adjacents.forEach(function(adjacent){
             if (!evaluated[adjacent]) {
@@ -87,6 +113,14 @@ function solve(puzzle) {
         });
     };
 
-    evaluate(puzzle);
+    try {
+        evaluate(puzzle);
+    } catch (e) {
+        console.log(e.message);
+        console.log(Object.keys(evaluated).length + " positions evaluated.")
+    }
+
 
 }
+
+solve('480921657967345821000876493008102900729504108006790200372009014814253769605410082');
