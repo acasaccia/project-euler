@@ -92,11 +92,33 @@ function get_next_move(puzzle) {
 function get_valid_values(puzzle, insertion_index) {
     var valid_moves = [];
     for (var i=1; i<=9; i++) {
-        if (valid_insertion(puzzle, insertion_index, i)) {
+        if (valid_insertion(puzzle, insertion_index, i) /*&& look_ahead(puzzle, insertion_index, i)*/) {
             valid_moves.push(i);
         }
     }
     return valid_moves;
+}
+
+function look_ahead(puzzle, insertion_index, value) {
+    var ok = true;
+    var next_insertion_index = insertion_index;
+    var valid_move;
+    puzzle[insertion_index] = value;
+    while((next_insertion_index = puzzle.indexOf(0, next_insertion_index+1)) !== -1) {
+        valid_move = false;
+        for (var i=1; i<=9; i++) {
+            if (valid_insertion(puzzle, next_insertion_index, i)) {
+                valid_move = true;
+                break;
+            }
+        }
+        ok = ok & valid_move;
+        if (!ok) {
+            break;
+        }
+    }
+    puzzle[insertion_index] = 0;
+    return ok;
 }
 
 function solved(puzzle) {
@@ -126,6 +148,11 @@ function solve(puzzle) {
             throw new Error(puzzle)
         }
         var next_move = get_next_move(puzzle);
+        //var insertion_index = puzzle.indexOf(0);
+        //var next_move = {
+        //    insertion_index: insertion_index,
+        //    valid_values: get_valid_values(puzzle, insertion_index)
+        //};
         next_move.valid_values.forEach(function(valid_value) {
             puzzle[next_move.insertion_index] = valid_value;
             evaluate(puzzle);
