@@ -70,7 +70,26 @@ function valid_insertion(table, position, value) {
         valid_column(table, column_id, value);
 }
 
-function get_valid_moves(puzzle, insertion_index) {
+function get_next_move(puzzle) {
+    var next_move = {},
+        next_insertion_index = puzzle.indexOf(0),
+        valid_values = get_valid_values(puzzle, next_insertion_index);
+    next_move.insertion_index = next_insertion_index;
+    next_move.valid_values = valid_values;
+    while(
+        (next_insertion_index = puzzle.indexOf(0, next_insertion_index+1)) !== -1 &&
+        next_move.valid_values.length > 1
+    ) {
+        valid_values = get_valid_values(puzzle, next_insertion_index);
+        if (next_move.valid_values.length > valid_values.length) {
+            next_move.valid_values = valid_values;
+            next_move.insertion_index = next_insertion_index;
+        }
+    }
+    return next_move;
+}
+
+function get_valid_values(puzzle, insertion_index) {
     var valid_moves = [];
     for (var i=1; i<=9; i++) {
         if (valid_insertion(puzzle, insertion_index, i)) {
@@ -97,24 +116,23 @@ function print_solution(puzzle) {
     }
 }
 
-var c = 0;
-
-function evaluate(puzzle) {
-    c++;
-    if (solved(puzzle)) {
-        throw new Error(puzzle)
-    }
-    var insertion_index = puzzle.indexOf(0);
-    var valid_values = get_valid_moves(puzzle, insertion_index);
-    valid_values.forEach(function(valid_value) {
-        puzzle[insertion_index] = valid_value;
-        evaluate(puzzle);
-    });
-    puzzle[insertion_index] = 0;
-}
-
 function solve(puzzle) {
+    var c = 0;
     var solution;
+
+    var evaluate = function(puzzle) {
+        c++;
+        if (solved(puzzle)) {
+            throw new Error(puzzle)
+        }
+        var next_move = get_next_move(puzzle);
+        next_move.valid_values.forEach(function(valid_value) {
+            puzzle[next_move.insertion_index] = valid_value;
+            evaluate(puzzle);
+        });
+        puzzle[next_move.insertion_index] = 0;
+    };
+
     try {
         evaluate(puzzle);
     } catch (e) {
