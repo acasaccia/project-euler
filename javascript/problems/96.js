@@ -112,7 +112,7 @@ function look_ahead(puzzle, insertion_index, value) {
                 break;
             }
         }
-        ok = ok & valid_move;
+        ok = ok && valid_move;
         if (!ok) {
             break;
         }
