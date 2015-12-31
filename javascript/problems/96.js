@@ -26,77 +26,62 @@
 // left corner of each solution grid; for example, 483 is the 3-digit number found in the top left corner of the
 // solution grid above.
 
-function valid_quadrant(table, quadrant_row_id, quadrant_column_id, value) {
+function get_most_constrained_cell(puzzle) {
+    var cell_index = -1,
+        cell = {},
+        cell_valid_values;
+    while((cell_index = puzzle.indexOf(0, cell_index + 1)) !== -1) {
+        cell_valid_values = get_valid_values(puzzle, cell_index);
+        if (!cell.index || cell_valid_values.length < cell.valid_values.length) {
+            cell.valid_values = cell_valid_values;
+            cell.index = cell_index;
+        }
+        if (cell_valid_values.length === 1) {
+            break;
+        }
+    }
+    return cell;
+}
+
+function get_cells_to_check(index) {
+    var row_id = parseInt(index / 9);
+    var column_id = index % 9;
+    var column_begin = column_id;
+    var column_end = column_id + 72;
+    var cells_to_check = [];
+    for (var i=column_begin; i<=column_end; i+=9) {
+        cells_to_check.push(i);
+    }
+    var row_begin = row_id * 9;
+    var row_end = row_begin + 8;
+    for (var i=row_begin; i<=row_end; i++) {
+        cells_to_check.push(i);
+    }
+    var quadrant_row_id = parseInt(row_id / 3);
+    var quadrant_column_id = parseInt(column_id / 3);
     var first_cell = quadrant_row_id * 27 + quadrant_column_id * 3;
     for (var i=0; i<3; i++) {
         for (var j=0; j<3; j++) {
-            if (table[first_cell+i+j*9] === value) {
-                return false;
-            }
+            cells_to_check.push(first_cell+i+j*9);
         }
     }
-    return true;
+    return cells_to_check;
+
 }
 
-function valid_row(table, row_id, value) {
-    var row_begin = row_id*9;
-    var row_end = row_begin+8;
-    for (var i=row_begin; i<=row_end; i++) {
-        if (table[i] === value) {
-            return false;
-        }
+function get_valid_values(puzzle, index) {
+    var invalid = {};
+    var valid = [];
+    var cells_to_check = get_cells_to_check(index);
+    for (var i=0; i<27; i++) {
+        invalid[puzzle[cells_to_check[i]]] = true;
     }
-    return true;
-}
-
-function valid_column(table, column_id, value) {
-    var column_begin = column_id;
-    var column_end = column_id + 72;
-    for (var i=column_begin; i<=column_end; i+=9) {
-        if (table[i] === value) {
-            return false;
-        }
-    }
-    return true;
-}
-
-function valid_value(table, position, value) {
-    var row_id = parseInt(position / 9);
-    var column_id = position % 9;
-    var quadrant_row_id = parseInt(row_id / 3);
-    var quadrant_column_id = parseInt(column_id / 3);
-    return valid_quadrant(table, quadrant_row_id, quadrant_column_id, value) &&
-        valid_row(table, row_id, value) &&
-        valid_column(table, column_id, value);
-}
-
-function get_next_move(puzzle) {
-    var next_move = {},
-        next_insertion_index = puzzle.indexOf(0),
-        valid_values = get_valid_values(puzzle, next_insertion_index);
-    next_move.insertion_index = next_insertion_index;
-    next_move.valid_values = valid_values;
-    while(
-        (next_insertion_index = puzzle.indexOf(0, next_insertion_index+1)) !== -1 &&
-        next_move.valid_values.length > 1
-    ) {
-        valid_values = get_valid_values(puzzle, next_insertion_index);
-        if (next_move.valid_values.length > valid_values.length) {
-            next_move.valid_values = valid_values;
-            next_move.insertion_index = next_insertion_index;
-        }
-    }
-    return next_move;
-}
-
-function get_valid_values(puzzle, insertion_index) {
-    var valid_moves = [];
     for (var i=1; i<=9; i++) {
-        if (valid_value(puzzle, insertion_index, i)) {
-            valid_moves.push(i);
+        if (!invalid[i]) {
+            valid.push(i);
         }
     }
-    return valid_moves;
+    return valid;
 }
 
 function solved(puzzle) {
@@ -121,43 +106,42 @@ function solve(puzzle) {
     var solution;
 
     var evaluate = function(puzzle) {
+        if (solution) {
+            return;
+        }
         c++;
         if (solved(puzzle)) {
-            throw new Error(puzzle)
+            solution = puzzle.slice();
+            return;
         }
-        var next_move = get_next_move(puzzle);
-        //var insertion_index = puzzle.indexOf(0);
-        //var next_move = {
-        //    insertion_index: insertion_index,
-        //    valid_values: get_valid_values(puzzle, insertion_index)
-        //};
-        next_move.valid_values.forEach(function(valid_value) {
-            puzzle[next_move.insertion_index] = valid_value;
+        var cell = get_most_constrained_cell(puzzle);
+        cell.valid_values.forEach(function(valid_value) {
+            puzzle[cell.index] = valid_value;
             evaluate(puzzle);
         });
-        puzzle[next_move.insertion_index] = 0;
+        puzzle[cell.index] = 0;
     };
 
-    try {
-        evaluate(puzzle);
-    } catch (e) {
-        solution = e.message.split(',');
-        //print_solution(solution);
+    evaluate(puzzle);
+    if (solution) {
+        // print_solution(solution);
     }
-    //console.log("Evaluated %d positions", c);
+    // console.log("Evaluated %d positions", c);
+
     return solution;
 }
 
 var lines = require('fs').readFileSync('./problems/input/sudoku.txt', 'utf-8').split('\n').filter(Boolean);
-var result = 0, puzzle, solution;
+var result = 0,
+    puzzle, solution;
 
 while(lines.length) {
     lines.shift();
     puzzle = [];
     for (var i=0; i<9; i++) {
-        puzzle.push.apply(puzzle, lines.shift().split(''));
+        puzzle.push.apply(puzzle, lines.shift().split('').map(function(v){ return parseInt(v); }));
     }
-    solution = solve(puzzle.map(function(v){ return parseInt(v); }));
+    solution = solve(puzzle).join('').split('');
     result += parseInt(solution[0] + solution[1] + solution[2]);
 }
 
