@@ -60,7 +60,7 @@ function valid_column(table, column_id, value) {
     return true;
 }
 
-function valid_insertion(table, position, value) {
+function valid_value(table, position, value) {
     var row_id = parseInt(position / 9);
     var column_id = position % 9;
     var quadrant_row_id = parseInt(row_id / 3);
@@ -92,7 +92,7 @@ function get_next_move(puzzle) {
 function get_valid_values(puzzle, insertion_index) {
     var valid_moves = [];
     for (var i=1; i<=9; i++) {
-        if (valid_insertion(puzzle, insertion_index, i) /*&& look_ahead(puzzle, insertion_index, i)*/) {
+        if (valid_value(puzzle, insertion_index, i) /*&& look_ahead(puzzle, insertion_index, i)*/) {
             valid_moves.push(i);
         }
     }
@@ -107,7 +107,7 @@ function look_ahead(puzzle, insertion_index, value) {
     while((next_insertion_index = puzzle.indexOf(0, next_insertion_index+1)) !== -1) {
         valid_move = false;
         for (var i=1; i<=9; i++) {
-            if (valid_insertion(puzzle, next_insertion_index, i)) {
+            if (valid_value(puzzle, next_insertion_index, i)) {
                 valid_move = true;
                 break;
             }
