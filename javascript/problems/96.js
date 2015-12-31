@@ -62,7 +62,7 @@ function get_cells_to_check(index) {
     var first_cell = quadrant_row_id * 27 + quadrant_column_id * 3;
     for (var i=0; i<3; i++) {
         for (var j=0; j<3; j++) {
-            cells_to_check.push(first_cell+i+j*9);
+            cells_to_check.push(first_cell + i + j * 9);
         }
     }
     return cells_to_check;
