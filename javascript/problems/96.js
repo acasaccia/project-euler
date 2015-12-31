@@ -92,10 +92,10 @@ function print_solution(puzzle) {
     for (var i=0; i<9; i++) {
         var row = [];
         for (var j=0; j<3; j++) {
-            row.push(puzzle.slice(i*9+j*3, i*9+j*3+3).join(''));
+            row.push(puzzle.slice(i*9 + j*3, i*9 + j*3 + 3).join(''));
         }
         console.log(row.join(' '));
-        if ((i+1)%3 === 0) {
+        if ((i+1) % 3 === 0) {
             console.log('');
         }
     }
