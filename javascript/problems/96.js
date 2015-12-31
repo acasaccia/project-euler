@@ -26,6 +26,26 @@
 // left corner of each solution grid; for example, 483 is the 3-digit number found in the top left corner of the
 // solution grid above.
 
+var lines = require('fs').readFileSync('./problems/input/sudoku.txt', 'utf-8').split('\n').filter(Boolean);
+var result = 0,
+    associated_cells = {},
+    puzzle,
+    solution;
+
+while(lines.length) {
+    lines.shift();
+    puzzle = [];
+    for (var i=0; i<9; i++) {
+        puzzle.push.apply(puzzle, lines.shift().split('').map(function(v){ return parseInt(v); }));
+    }
+    solution = solve(puzzle);
+    if (solution) {
+        result += parseInt('' + solution[0] + solution[1] + solution[2]);
+    }
+}
+
+console.log(result);
+
 function get_most_constrained_cell(puzzle) {
     var cell_index = -1,
         cell = {},
@@ -43,37 +63,48 @@ function get_most_constrained_cell(puzzle) {
     return cell;
 }
 
-function get_cells_to_check(index) {
+function get_associated_cells(index) {
+    if (associated_cells[index]) {
+        return associated_cells[index];
+    }
     var row_id = parseInt(index / 9);
     var column_id = index % 9;
     var column_begin = column_id;
     var column_end = column_id + 72;
     var cells_to_check = [];
     for (var i=column_begin; i<=column_end; i+=9) {
-        cells_to_check.push(i);
+        if (i !== index) {
+            cells_to_check[i] = true;
+        }
     }
     var row_begin = row_id * 9;
     var row_end = row_begin + 8;
     for (var i=row_begin; i<=row_end; i++) {
-        cells_to_check.push(i);
+        if (i !== index) {
+            cells_to_check[i] = true;
+        }
     }
     var quadrant_row_id = parseInt(row_id / 3);
     var quadrant_column_id = parseInt(column_id / 3);
     var first_cell = quadrant_row_id * 27 + quadrant_column_id * 3;
+    var k;
     for (var i=0; i<3; i++) {
         for (var j=0; j<3; j++) {
-            cells_to_check.push(first_cell + i + j * 9);
+            k = first_cell + i + j * 9;
+            if (k !== index) {
+                cells_to_check[k] = true;
+            }
         }
     }
-    return cells_to_check;
-
+    associated_cells[index] = Object.keys(cells_to_check);
+    return associated_cells[index];
 }
 
 function get_valid_values(puzzle, index) {
     var invalid = {};
     var valid = [];
-    var cells_to_check = get_cells_to_check(index);
-    for (var i=0; i<27; i++) {
+    var cells_to_check = get_associated_cells(index);
+    for (var i=0; i<20; i++) {
         invalid[puzzle[cells_to_check[i]]] = true;
     }
     for (var i=1; i<=9; i++) {
@@ -89,6 +120,10 @@ function solved(puzzle) {
 }
 
 function print_solution(puzzle) {
+    if (!puzzle) {
+        console.log("Couldn't solve puzzle")
+        return;
+    }
     for (var i=0; i<9; i++) {
         var row = [];
         for (var j=0; j<3; j++) {
@@ -101,48 +136,27 @@ function print_solution(puzzle) {
     }
 }
 
+function evaluate(puzzle, status) {
+    if (status.solution) {
+        return;
+    }
+    status.counter++;
+    if (solved(puzzle)) {
+        status.solution = puzzle.slice();
+        return;
+    }
+    var cell = get_most_constrained_cell(puzzle);
+    cell.valid_values.forEach(function(valid_value) {
+        puzzle[cell.index] = valid_value;
+        evaluate(puzzle, status);
+    });
+    puzzle[cell.index] = 0;
+}
+
 function solve(puzzle) {
-    var c = 0;
-    var solution;
-
-    var evaluate = function(puzzle) {
-        if (solution) {
-            return;
-        }
-        c++;
-        if (solved(puzzle)) {
-            solution = puzzle.slice();
-            return;
-        }
-        var cell = get_most_constrained_cell(puzzle);
-        cell.valid_values.forEach(function(valid_value) {
-            puzzle[cell.index] = valid_value;
-            evaluate(puzzle);
-        });
-        puzzle[cell.index] = 0;
-    };
-
-    evaluate(puzzle);
-    if (solution) {
-        // print_solution(solution);
-    }
-    // console.log("Evaluated %d positions", c);
-
-    return solution;
+    var status = { counter: 0, solution: false };
+    evaluate(puzzle, status);
+    //print_solution(status.solution);
+    //console.log("Evaluated %d positions", status.counter);
+    return status.solution;
 }
-
-var lines = require('fs').readFileSync('./problems/input/sudoku.txt', 'utf-8').split('\n').filter(Boolean);
-var result = 0,
-    puzzle, solution;
-
-while(lines.length) {
-    lines.shift();
-    puzzle = [];
-    for (var i=0; i<9; i++) {
-        puzzle.push.apply(puzzle, lines.shift().split('').map(function(v){ return parseInt(v); }));
-    }
-    solution = solve(puzzle).join('').split('');
-    result += parseInt(solution[0] + solution[1] + solution[2]);
-}
-
-console.log(result);
