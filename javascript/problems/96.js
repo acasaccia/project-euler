@@ -30,9 +30,12 @@ var lines = require('fs').readFileSync('./problems/input/sudoku.txt', 'utf-8').s
 var result = 0,
     associated_cells = {},
     puzzle,
-    solution;
+    solution,
+    puzzle_tried = 0,
+    puzzle_solved = 0;
 
 while(lines.length) {
+    puzzle_tried++;
     lines.shift();
     puzzle = [];
     for (var i=0; i<9; i++) {
@@ -40,10 +43,12 @@ while(lines.length) {
     }
     solution = solve(puzzle);
     if (solution) {
+        puzzle_solved++;
         result += parseInt('' + solution[0] + solution[1] + solution[2]);
     }
 }
 
+console.log("Solved: %d/%d", puzzle_solved, puzzle_tried)
 console.log(result);
 
 function get_most_constrained_cell(puzzle) {
