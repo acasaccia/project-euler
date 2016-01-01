@@ -51,17 +51,19 @@ while(lines.length) {
 console.log("Solved: %d/%d", puzzle_solved, puzzle_tried)
 console.log(result);
 
-function get_most_constrained_cell(puzzle) {
+function get_most_constrained_cell(puzzle, valid_values) {
     var cell_index = -1,
         cell = {},
-        cell_valid_values;
+        cell_valid_values,
+        cell_valid_values_count;
     while((cell_index = puzzle.indexOf(0, cell_index + 1)) !== -1) {
-        cell_valid_values = get_valid_values(puzzle, cell_index);
-        if (!cell.index || cell_valid_values.length < cell.valid_values.length) {
+        cell_valid_values = valid_values[cell_index];
+        cell_valid_values_count = cell_valid_values.length;
+        if (!cell.index || cell_valid_values_count < cell.valid_values.length) {
             cell.valid_values = cell_valid_values;
             cell.index = cell_index;
         }
-        if (cell_valid_values.length < 2) {
+        if (cell_valid_values_count < 2) {
             // if number of valid options is less than 2 we have found either:
             // one of the most constrained cell -> analyze it next,
             // a cell for which there are no options -> backtrack immediately
@@ -144,7 +146,27 @@ function print_solution(puzzle) {
     }
 }
 
-function evaluate(puzzle, status) {
+function do_move(puzzle, valid_values, index, value) {
+    puzzle[index] = value;
+    var associated_cells = get_associated_cells(index),
+        modified = [], i;
+    associated_cells.forEach(function(associated_cell){
+        if (valid_values[associated_cell] && (i = valid_values[associated_cell].indexOf(value)) !== -1) {
+            valid_values[associated_cell].splice(i, 1);
+            modified.push(associated_cell);
+        }
+    });
+    return modified;
+}
+
+function undo_move(puzzle, valid_values, index, value, modified) {
+    puzzle[index] = 0;
+    modified.forEach(function(modified_cell){
+        valid_values[modified_cell].push(value);
+    });
+}
+
+function evaluate(puzzle, valid_values, status) {
     if (status.solution) {
         return;
     }
@@ -153,17 +175,25 @@ function evaluate(puzzle, status) {
         status.solution = puzzle.slice();
         return;
     }
-    var cell = get_most_constrained_cell(puzzle);
+    var cell = get_most_constrained_cell(puzzle, valid_values),
+        modified;
     cell.valid_values.forEach(function(valid_value) {
         puzzle[cell.index] = valid_value;
-        evaluate(puzzle, status);
+        modified = do_move(puzzle, valid_values, cell.index, valid_value);
+        evaluate(puzzle, valid_values, status);
+        undo_move(puzzle, valid_values, cell.index, valid_value, modified);
     });
     puzzle[cell.index] = 0;
 }
 
 function solve(puzzle) {
     var status = { counter: 0, solution: false };
-    evaluate(puzzle, status);
+    var cell_index = -1;
+    var valid_values = {};
+    while((cell_index = puzzle.indexOf(0, cell_index + 1)) !== -1) {
+        valid_values[cell_index] = get_valid_values(puzzle, cell_index);
+    }
+    evaluate(puzzle, valid_values, status);
     //print_solution(status.solution);
     //console.log("Evaluated %d positions", status.counter);
     return status.solution;
