@@ -61,7 +61,10 @@ function get_most_constrained_cell(puzzle) {
             cell.valid_values = cell_valid_values;
             cell.index = cell_index;
         }
-        if (cell_valid_values.length === 1) {
+        if (cell_valid_values.length < 2) {
+            // if number of valid options is less than 2 we have found either:
+            // one of the most constrained cell -> analyze it next,
+            // a cell for which there are no options -> backtrack immediately
             break;
         }
     }
