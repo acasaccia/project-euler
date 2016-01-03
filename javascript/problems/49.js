@@ -5,7 +5,7 @@
 // one other 4-digit increasing sequence.
 // What 12-digit number do you form by concatenating the three terms in this sequence?
 
-var is_prime = require('../lib/is_prime.js').is_prime;
+var is_prime = require('../lib/is_prime.js');
 require('../lib/permutations.js');
 require('../lib/combinations.js');
 
