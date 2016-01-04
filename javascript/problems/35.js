@@ -2,16 +2,7 @@
 // There are thirteen such primes below 100: 2, 3, 5, 7, 11, 13, 17, 31, 37, 71, 73, 79, and 97.
 // How many circular primes are there below one million?
 
-function is_prime(n) {
-	var i = Math.floor(Math.sqrt(n));
-	while(i>1) {
-		if (n%i==0) {
-			return false;
-		}
-		i--;
-	}
-	return true;
-}
+var is_prime = require("../lib/is_prime.js");
 
 function rotate(n, places) {
 	if (places == 0) {

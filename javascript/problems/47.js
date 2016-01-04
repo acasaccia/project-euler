@@ -11,6 +11,8 @@
 //
 // Find the first four consecutive integers to have four distinct prime factors. What is the first of these numbers?
 
+var is_prime = require("../lib/is_prime.js");
+
 var found = false,
 	targetStreak = 4,
 	streak = 0,
@@ -51,7 +53,7 @@ function addFactorizations($factors1, $factors2) {
 
 function factorize($number) {
     $factors = {};
-    if (isPrime($number)) {
+    if (is_prime($number)) {
         $factors[$number] = 1;
 		return $factors;
 	}
@@ -66,15 +68,4 @@ function factorize($number) {
 		$factor++;
     }
     return $factors;
-}
-
-function isPrime(n) {
-    var i = Math.floor(Math.sqrt(n));
-    while(i>1) {
-        if (n%i==0) {
-            return false;
-        }
-        i--;
-    }
-    return true;
 }

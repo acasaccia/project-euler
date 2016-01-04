@@ -2,25 +2,7 @@
 // Find the sum of the only eleven primes that are both truncatable from left to right and right to left.
 // NOTE: 2, 3, 5, and 7 are not considered to be truncatable primes.
 
-function is_prime(n) {
-//	if (typeof(primes_cache[n]) !== 'undefined') {
-//		return primes_cache[n];
-//	}
-	if (n==1) {
-//		primes_cache[n] = false;
-		return false;
-	}
-	var i = Math.floor(Math.sqrt(n));
-	while(i>1) {
-		if (n%i==0) {
-//			primes_cache[n] = false;
-			return false;
-		}
-		i--;
-	}
-//	primes_cache[n] = true;
-	return true;
-}
+var is_prime = require("../lib/is_prime.js");
 
 function is_truncatable_prime(n) {
 	var sn = n.toString();

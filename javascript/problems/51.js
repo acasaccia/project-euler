@@ -9,7 +9,7 @@
 
 var is_prime = require("../lib/is_prime.js");
 var binary = require("../lib/binary.js");
-require("../lib/replaceAt.js");
+require("../lib/string_replace_at.js");
 
 var n = 1;
 var found = false;
@@ -60,20 +60,20 @@ function get_masks(n) {
 }
 
 function apply_mask(n, mask, c) {
-    var string = String(n)
+    var string = String(n);
     for (var i=0; i<mask.length; i++) {
         if (mask.charAt(i) === '1') {
-            string = string.replaceAt(i, String(c));
+            string = string.replace_at(i, String(c));
         }
     }
     return parseInt(string);
 }
 
 function get_pattern(n, mask) {
-    var string = String(n)
+    var string = String(n);
     for (var i=0; i<mask.length; i++) {
         if (mask.charAt(i) === '1') {
-            string = string.replaceAt(i, '*');
+            string = string.replace_at(i, '*');
         }
     }
     return string;

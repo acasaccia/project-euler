@@ -1,6 +1,10 @@
 // We shall say that an n-digit number is pandigital if it makes use of all the digits 1 to n exactly once. For example, 2143 is a 4-digit pandigital and is also prime.
 // What is the largest n-digit pandigital prime that exists?
 
+var is_prime = require("../lib/is_prime.js");
+require("../lib/string_swap_chars.js");
+require("../lib/string_swap_substr.js");
+
 var start = new Date(), end, elapsed, partial,
 	candidates, candidates_length, solution_found;
 
@@ -96,18 +100,4 @@ function get_next_l(permutation, k) {
 		}
 	}
 	throw Exception('WTF?');
-}
-
-function is_prime(n) {
-	if (n == 1) {
-		return false;
-	}
-	var i = Math.floor(Math.sqrt(n));
-	while(i>1) {
-		if (n%i==0) {
-			return false;
-		}
-		i--;
-	}
-	return true;
 }

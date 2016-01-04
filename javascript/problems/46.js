@@ -11,6 +11,8 @@
 // 
 // What is the smallest odd composite that cannot be written as the sum of a prime and twice a square?
 
+var is_prime = require("../lib/is_prime.js");
+
 var n = 9,
 	found;
 
@@ -21,17 +23,6 @@ while (!found) {
 		console.log(n);
 	}
 	n+=2;
-}
-
-function is_prime(n) {
-	var i = Math.floor(Math.sqrt(n));
-	while(i>1) {
-		if (n%i==0) {
-			return false;
-		}
-		i--;
-	}
-	return true;
 }
 
 function can_rewrite(n) {

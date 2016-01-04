@@ -11,21 +11,12 @@
 // d8d9d10=289 is divisible by 17
 // Find the sum of all 0 to 9 pandigital numbers with this property.
 
-String.prototype.swap_chars = function(i,j) {
-	var array_string = this.split("");
-	tmp = array_string[i];
-	array_string[i] = array_string[j];
-	array_string[j] = tmp;
-	return array_string.join("");
-}
-
-String.prototype.swap_substr = function(i) {
-	return this.substr(0, i) + this.substr(i).split("").reverse().join("");
-}
-
 var permutations,
 	permutations_length,
 	result = 0;
+
+require("../lib/string_swap_chars.js");
+require("../lib/string_swap_substr.js");
 
 permutations = generate_permutations(9);
 //permutations = ['1406357289'];
