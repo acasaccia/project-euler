@@ -4,7 +4,6 @@ var sanitization = require('./sanitization.js');
 
 module.exports = function is_prime(n) {
     if (!sanitization.is_integer(n)) {
-        console.warn("%j is not an integer, casting to %d", n, parseInt(n));
         n = parseInt(n);
     }
     if (n < 2 || isNaN(n)) {

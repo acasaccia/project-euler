@@ -1,6 +1,6 @@
 "use strict";
 
-var is_prime = require('../is_prime.js').is_prime;
+var is_prime = require('../is_prime.js');
 
 describe("is_prime", function(){
 
