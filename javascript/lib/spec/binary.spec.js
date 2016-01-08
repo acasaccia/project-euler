@@ -22,6 +22,6 @@ describe("binary()", function(){
         pairs.forEach(function(pair){
             expect(binary(pair[0])).toEqual(pair[1]);
         });
-    })
+    });
 
 });
