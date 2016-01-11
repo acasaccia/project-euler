@@ -9,7 +9,7 @@ var max_sum = 0;
 
 for (var a=0; a<100; a++) {
     for (var b=0; b<100; b++) {
-        var big_number = BigInteger.pow(a, b);
+        var big_number = BigInteger.pow(String(a), b);
         var digits = big_number.split('');
         var sum = digits.map(function(v){
             return parseInt(v);

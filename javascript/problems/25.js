@@ -21,9 +21,10 @@
 
 var BigInteger = require("../lib/BigInteger.js");
 
-var n1 = 1,
-    n2 = 1,
-    c = 2, n;
+var n1 = "1",
+    n2 = "1",
+    c = 2,
+    n;
 
 do {
     c++;
