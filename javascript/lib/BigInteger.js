@@ -40,7 +40,7 @@ exports.add = function add(a, b) {
  * @param b
  * @returns {*}
  */
-exports.multiply = function pow(a, b) {
+exports.multiply = function multiply(a, b) {
     if (typeof a !== "String") {
         a = String(a);
     }
