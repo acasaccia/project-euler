@@ -130,12 +130,46 @@ function multiply(a, b) {
 }
 
 /**
- * Divides two BigIntegers
+ * Divides two BigIntegers and returns a BigInteger
  * @param a
  * @param b
- * @returns a / b
+ * @param return_remainder return remainder instead of division result
+ * @returns a / b or a % b if return_remainder is true
  */
-function divide(a, b) {
+function divide(a, b, return_remainder) {
+    if (b === "0") {
+        throw new Error("Divide by zero")
+    }
+    if (compare(a, b) < 0) {
+        if (return_remainder) {
+            return a;
+        } else {
+            return "0";
+        }
+    }
+    var remaining_digits = a.split("");
+    var selected = "", accumulator, times, result = "";
+    while (remaining_digits.length) {
+        selected += remaining_digits.shift();
+        selected = trim_leading_zeros(selected);
+        if (compare(selected, b) > -1) {
+            accumulator = '0';
+            times = 0;
+            while (compare(add(accumulator, b), selected) < 1) {
+                accumulator = add(accumulator, b);
+                times++;
+            }
+            result += times;
+            selected = subtract(selected, accumulator);
+        } else {
+            result += 0;
+        }
+    }
+    if (return_remainder) {
+        return trim_leading_zeros(selected);
+    } else {
+        return trim_leading_zeros(result);
+    }
 }
 
 /**
@@ -145,7 +179,7 @@ function divide(a, b) {
  * @returns a % b
  */
 function mod(a, b) {
-
+    return divide(a, b, true);
 }
 
 /**

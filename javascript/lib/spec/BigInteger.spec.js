@@ -64,6 +64,41 @@ describe("BigInteger", function(){
 
     });
 
+    it("should divide big integers", function(){
+
+        var a = "100";
+        var b = "20";
+        var c = BigInteger.divide(a, b);
+        expect(c).toBe("5");
+
+        var a = "1000000000000000000000005";
+        var b = "20";
+        var c = BigInteger.mod(a, b);
+        expect(c).toBe("5");
+
+        var a = "105";
+        var b = "20";
+        var c = BigInteger.mod(a, b);
+        expect(c).toBe("5");
+
+        var a = "20";
+        var b = "100";
+        var c = BigInteger.divide(a, b);
+        expect(c).toBe("0");
+
+        var a = "12";
+        var b = "1";
+        var c = BigInteger.divide(a, b);
+        expect(c).toBe("12");
+
+        var a = "784678465284567846578465658345683465283658356901058671674";
+        var b = "5126754895707856765628564651685682548975646521945619";
+        var c = BigInteger.multiply(a, b);
+        expect(BigInteger.divide(c, a)).toBe(b);
+        expect(BigInteger.divide(c, b)).toBe(a);
+
+    });
+
     it("should elevate to power", function(){
 
         var c = BigInteger.pow("99", 99);
