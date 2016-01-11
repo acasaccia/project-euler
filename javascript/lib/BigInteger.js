@@ -42,13 +42,13 @@ function add(a, b) {
         b = '0' + b;
         digits_difference--;
     }
-    var me_last_digit, other_last_digit, sum,
+    var a_last_digit, b_last_digit, sum,
         carry = 0,
         result = '';
     for (var i = b.length - 1; i>=0; i--) {
-        me_last_digit = parseInt(a.substr(i, 1));
-        other_last_digit = parseInt(b.substr(i, 1));
-        sum = me_last_digit + other_last_digit + carry;
+        a_last_digit = parseInt(a.substr(i, 1));
+        b_last_digit = parseInt(b.substr(i, 1));
+        sum = a_last_digit + b_last_digit + carry;
         carry = parseInt(sum / 10);
         result = (sum % 10) + result;
     }
@@ -76,17 +76,21 @@ function subtract(a, b) {
         b = '0' + b;
         digits_difference--;
     }
-    var me_last_digit, other_last_digit, sum,
-        carry = 0,
+    var a_last_digit, b_last_digit, diff,
+        lent = 0,
         result = '';
     for (var i = b.length - 1; i>=0; i--) {
-        me_last_digit = parseInt(a.substr(i, 1));
-        other_last_digit = parseInt(b.substr(i, 1));
-        sum = me_last_digit + other_last_digit + carry;
-        carry = parseInt(sum / 10);
-        result = (sum % 10) + result;
+        a_last_digit = parseInt(a.substr(i, 1));
+        b_last_digit = parseInt(b.substr(i, 1));
+        diff = a_last_digit - b_last_digit - lent;
+        if (diff < 0) {
+            diff += 10;
+            lent = 1;
+        } else {
+            lent = 0;
+        }
+        result = diff + result;
     }
-    result = carry > 0 ? '1' + result : result;
     return trim_leading_zeros(result);
 }
 

@@ -30,6 +30,25 @@ describe("BigInteger", function(){
 
     });
 
+    it("should subtract big integers", function(){
+
+        var a = "162348172356451826548726541287458245187451987459185619874569183475619834718147856";
+        var b = "12654458127564812746927569478256197815696254236854182745128451872564236451278451278412784518";
+        var c = BigInteger.add(a, b);
+        expect(BigInteger.subtract(c, a)).toBe(b);
+        expect(BigInteger.subtract(c, b)).toBe(a);
+
+        var a = "100";
+        var b = "33";
+        var c = "0";
+        var d = "10";
+        expect(BigInteger.subtract(a, b)).toBe("67");
+        expect(BigInteger.subtract(a, c)).toBe("100");
+        expect(BigInteger.subtract(b, d)).toBe("23");
+        expect(function(){BigInteger.subtract(c, b)}).toThrow();
+
+    });
+
     it("should multiply big integers", function(){
 
         var a = "15";
