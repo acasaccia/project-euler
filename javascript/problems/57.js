@@ -14,41 +14,47 @@
 //
 // In the first one-thousand expansions, how many fractions contain a numerator with more digits than denominator?
 
-var fractions = require("../lib/fractions");
+var fractions = require("../lib/big_fractions");
 
 var result = 0;
+var den_cache = {};
 
 for (var i=1; i<=1000; i++) {
     var expansion = expand(i);
     if (String(expansion.n).length > String(expansion.d).length) {
         result++;
     }
-    var sep = ''
-    for (var j=0; j<String(expansion.d).length; j++) {
-        sep += '-';
-    }
-    console.log("%d", expansion.n);
-    console.log(sep);
-    console.log("%d", expansion.d);
-    console.log("%j", String(expansion.n).length > String(expansion.d).length);
-    console.log("");
+    //var sep = ''
+    //for (var j=0; j<String(expansion.d).length; j++) {
+    //    sep += '-';
+    //}
+    //console.log("Test n° %d:", i);
+    //console.log("%s", expansion.n);
+    //console.log(sep);
+    //console.log("%s", expansion.d);
+    //console.log("%j", String(expansion.n).length > String(expansion.d).length);
+    //console.log("");
 }
 
 console.log(result);
 
 function expand(n) {
     var den = denominator(n);
-    return fractions.sum(1, 1, den.d, den.n);
+    return fractions.sum("1", "1", den.d, den.n);
 }
 
 function denominator(n) {
+    if (den_cache[n]) {
+        return den_cache[n];
+    }
     if (n === 1) {
         return {
-            n: 2,
-            d: 1
+            n: "2",
+            d: "1"
         }
     } else {
         var den = denominator(n-1);
-        return fractions.sum(2, 1, den.d, den.n);
+        den_cache[n] = fractions.sum("2", "1", den.d, den.n);
+        return den_cache[n];
     }
 }
