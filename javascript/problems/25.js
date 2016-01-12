@@ -28,7 +28,7 @@ var n1 = "1",
 
 do {
     c++;
-    n = BigInteger.add(n1, n2);
+    n = BigInteger.sum(n1, n2);
     n2 = n1;
     n1 = n;
 } while (n.length < 1000);

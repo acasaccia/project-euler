@@ -3,7 +3,7 @@
  */
 
 /**
- * Compares two BigIntegers and returns:
+ * Compares two BigIntegers
  * @param a
  * @param b
  * @returns 1 if a > b, 0 if a = b, -1 if a < b
@@ -31,7 +31,7 @@ function compare(a, b) {
  * @param b
  * @returns a + b
  */
-function add(a, b) {
+function sum(a, b) {
     if (a.length < b.length) {
         var tmp = a;
         a = b;
@@ -49,7 +49,7 @@ function add(a, b) {
         a_last_digit = parseInt(a.substr(i, 1));
         b_last_digit = parseInt(b.substr(i, 1));
         sum = a_last_digit + b_last_digit + carry;
-        carry = parseInt(sum / 10);
+        carry = Math.floor(sum / 10);
         result = (sum % 10) + result;
     }
     result = carry > 0 ? '1' + result : result;
@@ -124,7 +124,7 @@ function multiply(a, b) {
         }
     }
     var result = partials.reduce(function(prev, curr){
-        return add(prev, curr);
+        return sum(prev, curr);
     });
     return trim_leading_zeros(result);
 }
@@ -155,8 +155,8 @@ function divide(a, b, return_remainder) {
         if (compare(selected, b) > -1) {
             accumulator = '0';
             times = 0;
-            while (compare(add(accumulator, b), selected) < 1) {
-                accumulator = add(accumulator, b);
+            while (compare(sum(accumulator, b), selected) < 1) {
+                accumulator = sum(accumulator, b);
                 times++;
             }
             result += times;
@@ -213,7 +213,7 @@ function trim_leading_zeros(n) {
 }
 
 exports.compare = compare;
-exports.add = add;
+exports.sum = sum;
 exports.subtract = subtract;
 exports.multiply = multiply;
 exports.divide = divide;
