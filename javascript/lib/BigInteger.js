@@ -148,19 +148,20 @@ function divide(a, b, return_remainder) {
         }
     }
     var remaining_digits = a.split("");
-    var selected = "", accumulator, times, result = "";
+    var selected = "", accumulator, previous_accumulator, times, result = "";
     while (remaining_digits.length) {
         selected += remaining_digits.shift();
         selected = trim_leading_zeros(selected);
         if (compare(selected, b) > -1) {
             accumulator = '0';
+            previous_accumulator = '0';
             times = 0;
-            while (compare(sum(accumulator, b), selected) < 1) {
-                accumulator = sum(accumulator, b);
+            while (compare((accumulator = sum(accumulator, b)), selected) < 1) {
+                previous_accumulator = accumulator;
                 times++;
             }
             result += times;
-            selected = subtract(selected, accumulator);
+            selected = subtract(selected, previous_accumulator);
         } else {
             result += 0;
         }

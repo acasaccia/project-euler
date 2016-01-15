@@ -70,8 +70,8 @@ function big_fractions_sum(n1, d1, n2, d2) {
     var d = d2;
     var mcd = big_mcd(n, d);
     return {
-        n: mcd === '1' ? n : BigInteger.divide(n, mcd),
-        d: mcd === '1' ? d : BigInteger.divide(d, mcd)
+        n: mcd === "1" ? n : BigInteger.divide(n, mcd),
+        d: mcd === "1" ? d : BigInteger.divide(d, mcd)
     }
 }
 
