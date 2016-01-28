@@ -47,7 +47,7 @@
 
 "use strict";
 
-var hands = require("fs").readFileSync("problems/input/poker.txt", "utf-8").split("\n");
+var hands = require("fs").readFileSync("problems/input/p054_poker.txt", "utf-8").split("\n");
 
 var p1_won = 0;
 var ties = 0;

@@ -26,7 +26,7 @@
 // left corner of each solution grid; for example, 483 is the 3-digit number found in the top left corner of the
 // solution grid above.
 
-var lines = require('fs').readFileSync('./problems/input/sudoku.txt', 'utf-8').split('\n').filter(Boolean);
+var lines = require('fs').readFileSync('./problems/input/p096_sudoku.txt', 'utf-8').split('\n').filter(Boolean);
 var result = 0,
     associated_cells = {},
     puzzle,

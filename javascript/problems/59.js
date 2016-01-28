@@ -18,7 +18,7 @@ var encrypted = require("fs").readFileSync("./problems/input/p059_cipher.txt", "
     return parseInt(v);
 });
 
-var dictionary = require("fs").readFileSync("./problems/input/words.txt", "utf-8");
+var dictionary = require("fs").readFileSync("./problems/input/dictionary.txt", "utf-8");
 var result = false;
 for (var i=97; i<=122; i++) {
     for (var j=97; j<=122; j++) {
