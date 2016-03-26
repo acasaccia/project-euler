@@ -15,3 +15,15 @@
 //
 // It can be seen that n=6 produces a maximum n/φ(n) for n ≤ 10.
 // Find the value of n ≤ 1,000,000 for which n/φ(n) is a maximum.
+
+var sieve = require("../lib/sieve");
+var primes = sieve(Math.ceil(Math.sqrt(1000000)));
+
+var result = 1;
+var i = 0;
+while (result * primes[i] < 1000000) {
+    result *= primes[i];
+    i++;
+}
+
+console.log(result);
